@@ -1,0 +1,175 @@
+---
+title: "Milestone Report"
+author: "Gian Atmaja"
+date: "6/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(qdapDictionaries)
+library(qdapRegex)
+library(qdapTools)
+library(RColorBrewer)
+library(NLP)
+library(tm)
+library(SnowballC)
+library(slam)
+library(wordcloud)
+library(stringr)
+library(stringi)
+library(ngram)
+library(rJava)
+library(RWeka)
+library(ggplot2)
+library(ggthemes)
+library(dplyr)
+library(tidyr)
+```
+
+### Introduction
+
+This report will serve as an exploratory analysis towards the training data set for a word prediction algorithm, which aims to take an initial input of word(s) and return the most likely word that follows. In this report, we will provide summaries and features of the [provided data](https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip). We'll be using the English language files.
+
+### Analysis
+
+After downloading the zip file, unzip it. You'll see that there are text files of multiple languages, from 3 sources: blogs, news, and twitter. It is advisable to move all of its contents to a new folder, specifically made for this analysis, for a neater workflow. Next, in R, set your working directory to that folder. This part of the code will most likely be different for all users, so we won't provide the codes for this. After that, we'll read the English language files and bind them.
+
+```{r}
+blogs = readLines("en_US.blogs.txt", encoding = "UTF-8", skipNul = T)
+news = readLines("en_US.news.txt", encoding = "UTF-8", skipNul = T)
+twitter = readLines("en_US.twitter.txt", encoding = "UTF-8", skipNul = T)
+
+data = c(blogs, news, twitter)
+writeLines(data, "complete_data.txt")
+```
+
+We will get an overview of our data with the code below
+
+```{r}
+blogs_size = utils:::format.object_size(file.size("en_US.blogs.txt"), "auto")
+news_size = utils:::format.object_size(file.size("en_US.news.txt"), "auto")
+twitter_size = utils:::format.object_size(file.size("en_US.twitter.txt"), "auto")
+
+blogs_lines = length(blogs)
+news_lines = length(news)
+twitter_lines = length(twitter)
+
+blogs_char = nchar(blogs)
+news_char = nchar(news)
+twitter_char = nchar(twitter)
+blog_longest = max(blogs_char)
+news_longest = max(news_char)
+twitter_longest = max(twitter_char)
+blogsChar = sum(blogs_char)
+newsChar = sum(news_char)
+twitterChar = sum(twitter_char)
+
+File = c("Blogs", "News", "Twitter")
+Size = c(blogs_size, news_size, twitter_size)
+Lines_number = c(blogs_lines, news_lines, twitter_lines)
+Longest_line_length = c(blog_longest, news_longest, twitter_longest) 
+Characters = c(blogsChar, newsChar, twitterChar)
+
+data_summary = data.frame(cbind(File, Size, Lines_number, Longest_line_length, Characters))
+data_summary
+```
+
+We see that the blogs file is the largest, followed very closely by the news file. The twitter file, although having the most number of lines, takes the least space as it has less characters. This makes sense as tweets, unlike blogs/ news, includes very short posts, sometimes only 1-2 words long.
+
+These files are large, so to limit run time, we'll just be analysing a portion of them. We'll be sampling 15000 lines from each English text files, and do our analysis on the combined data of the samples. Also, we will build our corpus from there.
+
+```{r}
+blogs_sample = blogs[sample(1:length(blogs),15000)]
+news_sample = news[sample(1:length(news),15000)]
+twitter_sample = twitter[sample(1:length(twitter),15000)]
+
+sample_data = c(blogs_sample, news_sample, twitter_sample)
+writeLines(sample_data, "sample_data.txt")
+
+SampleData = readLines("sample_data.txt", encoding = "UTF-8")
+Sample_final = VCorpus(VectorSource(SampleData))
+```
+
+To make our analysis smoother, we should first clean our data. In this step, we would like to remove punctuations, numbers, url's, along with the stop and banned words. The banned words can be obtained from [here](http://www.bannedwordlist.com/). It's available in xml, txt, and csv format. Here, we downloaded the txt one.
+
+```{r}
+BannedWords = read.table("swearWords.txt", header = F)
+
+Sample_final = tm_map(Sample_final, 
+                      content_transformer(function(x)
+                        iconv(x, to = "UTF-8", sub = "byte")))
+
+Sample_final = tm_map(Sample_final, content_transformer(tolower))
+Sample_final = tm_map(Sample_final, content_transformer(removePunctuation))
+Sample_final = tm_map(Sample_final, content_transformer(removeNumbers))
+Sample_final = tm_map(Sample_final, content_transformer(function(x)
+  gsub("http[[:alnum:]]*", " ", x)))
+Sample_final = tm_map(Sample_final, stripWhitespace)
+
+Sample_final = tm_map(Sample_final, removeWords, stopwords("english"))
+Sample_final = tm_map(Sample_final, removeWords, BannedWords[,1])
+
+saveRDS(Sample_final, "final_sampleCorpus.RDS")
+```
+
+Now, we've got one more step to do before our data is ready for analysis, and that is to tokenize our corpus. For our initial analysis here, we will do it 3 times. One to construct the unigrams, one for bigrams, and the last for trigrams. Note that before performing tokenization, we'll have to convert our corpus to a dataframe. Furthermore, the tokenization part of the code may take some time to run.
+
+```{r}
+final_corpus = readRDS("final_sampleCorpus.RDS")
+corpus_DF = data.frame(text = unlist(sapply(final_corpus,`[`, "content")), stringsAsFactors = F)
+
+tokenize_function = function(Corpus, N){
+  Ngram = NGramTokenizer(Corpus, 
+                         Weka_control(min = N, max = N,
+                                      delimiters = " \\r\\n\\t.,;:\"()?!"))
+  Ngram = data.frame(table(Ngram))
+  Ngram = Ngram[order(Ngram$Freq, decreasing = T),]
+  colnames(Ngram) = c("String", "Count")
+  Ngram
+}
+
+unigram = tokenize_function(corpus_DF,1)
+bigram = tokenize_function(corpus_DF,2)
+trigram = tokenize_function(corpus_DF,3)
+```
+
+At this point, we're ready to perform our exploratory analysis. First, we will reorder the unigrams, bigrams, and trigrams in a descending order, starting from the one that appears most frequently. We'll then plot the most frequent 20. Here's the code.
+
+```{r}
+unigram_df = data.frame(unigram)%>%arrange(desc(Count))
+bigram_df = data.frame(bigram)%>%arrange(desc(Count))
+trigram_df = data.frame(trigram)%>%arrange(desc(Count))
+
+UniDF = unigram_df[1:20,]
+BiDF = bigram_df[1:20,]
+TriDF = trigram_df[1:20,]
+
+P_1gram = ggplot(UniDF) + geom_bar(aes(reorder(String,+Count), Count), stat = "identity", fill = "navajowhite3", alpha = I(3/5)) + 
+  xlab("String\n") + ylab("Count\n") + coord_flip() + theme_minimal()
+P_2gram = ggplot(BiDF) + geom_bar(aes(reorder(String,+Count), Count), stat = "identity", fill = "palegreen3", alpha = I(3/5)) + 
+  xlab("String\n") + ylab("Count\n") + coord_flip() + theme_minimal()
+P_3gram = ggplot(TriDF) + geom_bar(aes(reorder(String,+Count), Count), stat = "identity", fill = "slategray3", alpha = I(3/5)) + 
+  xlab("String\n") + ylab("Count\n") + coord_flip() + theme_minimal()
+```
+
+And here's our plots.
+
+```{r}
+P_1gram
+P_2gram
+P_3gram
+```
+
+Additionally, we also included a wordcloud of 100 words for the unigram.
+
+```{r}
+wordcloud(unigram_df$String, unigram_df$Count, max.words = 100, colors = brewer.pal(6, 'Dark2'))
+```
+
+### Next steps
+
+To construct our prediction model, higher n-grams may be performed to accept longer inputs. Furthermore, more samples may also be extracted from the provided data. Alternatively, One could also perform this analysis multiple times, but using strictly different samples, similar to what cross validation does in machine learning. While these steps will probably increase the accuracy and lower the bias, one should note that the run time required will undeniably rise as well.  
+
+Eventually, we should try out different sample sizes and find the right balance between run time and accuracy. In our case, we will most likely not deviate too much from the sample size used here.
