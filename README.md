@@ -4,7 +4,8 @@
 - [Go to web application](https://gian-atmaja.shinyapps.io/Word_Predict/)
 - [Codes for initial analysis](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/InitialAnalysis.R)
 - [Codes for predictor function](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Predictor.R)
-- [Initial analysis report](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Milestone_report.Rmd)
+- [Initial analysis report](https://rpubs.com/Ga25/624781)
+- [Data](https://d396qusza40orc.cloudfront.net/dsscapstone/dataset/Coursera-SwiftKey.zip)
 
 ### Description:
 This web application takes your text input and predicts the next most likely word. The model is created using ngrams.
