@@ -19,7 +19,7 @@ completely, then it will return one of the most likely word in random.
 
 ### Some Results from Analysis
 Based on the analysis performed on the dataset, we obtain the following results:
-
+![Wordcloud from Analysis](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/Screenshot%202022-10-04%20at%201.29.40%20PM.png)
 
 As seen from the wordcloud, larger words such as said, will, and one appear more frequently in the dataset, while words
 like night, team, and show appear less frequently.
