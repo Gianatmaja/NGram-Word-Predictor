@@ -24,7 +24,11 @@ Based on the analysis performed on the dataset, we obtain the following results:
 As seen from the wordcloud, larger words such as said, will, and one appear more frequently in the dataset, while words
 like night, team, and show appear less frequently.
 
+![Bigram](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/Screenshot%202022-10-04%20at%201.29.52%20PM.png)
+
 For the bigrams, phrases such as 'last year', 'New York', and 'right now' were among those most used in the dataset. 
+
+![Trigram](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/Screenshot%202022-10-04%20at%201.30.00%20PM.png)
 
 Finally, for the trigrams, the top 3 that are most frequently present include 'New York City', 'President Barack Obama', and 'let us know'. 
 
