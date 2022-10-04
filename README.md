@@ -16,3 +16,17 @@ The model works by first counting how many words are typed. If there are at leas
 next likely word based on the quadgram data. If there's less than 3 words, or if the preceeding words were unfamiliar to
 the model, it then uses the trigram data. The same process goes for bigram. If the model does not understand the word/s
 completely, then it will return one of the most likely word in random.
+
+### Some Results from Analysis
+Based on the analysis performed on the dataset, we obtain the following results:
+
+
+As seen from the wordcloud, larger words such as said, will, and one appear more frequently in the dataset, while words
+like night, team, and show appear less frequently.
+
+For the bigrams, phrases such as 'last year', 'New York', and 'right now' were among those most used in the dataset. 
+
+Finally, for the trigrams, the top 3 that are most frequently present include 'New York City', 'President Barack Obama', and 'let us know'. 
+
+### Web App in Action
+Some screenshots of the n-gram word predictor in action can be seen below.
