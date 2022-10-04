@@ -34,3 +34,9 @@ Finally, for the trigrams, the top 3 that are most frequently present include 'N
 
 ### Web App in Action
 Some screenshots of the n-gram word predictor in action can be seen below.
+
+![Example 1](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/Screenshot%202022-10-04%20at%201.54.46%20PM.png)
+
+![Example 2](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/Screenshot%202022-10-04%20at%201.55.09%20PM.png)
+
+![Example 3](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/Screenshot%202022-10-04%20at%201.56.15%20PM.png)
