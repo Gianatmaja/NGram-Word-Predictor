@@ -1,4 +1,4 @@
-# NGram-Word-Predictor
+# NGram Word Predictor
 
 ### Quick Links:
 - [Go to web application](https://gian-atmaja.shinyapps.io/Word_Predict/)
