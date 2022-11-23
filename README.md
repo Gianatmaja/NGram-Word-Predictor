@@ -19,24 +19,24 @@ completely, then it will return one of the most likely word in random.
 
 ### Some Results from Analysis
 Based on the analysis performed on the dataset, we obtain the following results:
-![Wordcloud from Analysis](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/Screenshot%202022-10-04%20at%201.29.40%20PM.png)
+![Wordcloud from Analysis](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/Wordcloud.png)
 
 As seen from the wordcloud, larger words such as said, will, and one appear more frequently in the dataset, while words
 like night, team, and show appear less frequently.
 
-![Bigram](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/Screenshot%202022-10-04%20at%201.29.52%20PM.png)
+![Bigram](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/bigram.png)
 
 For the bigrams, phrases such as 'last year', 'New York', and 'right now' were among those most used in the dataset. 
 
-![Trigram](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/Screenshot%202022-10-04%20at%201.30.00%20PM.png)
+![Trigram](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/trigram.png)
 
 Finally, for the trigrams, the top 3 that are most frequently present include 'New York City', 'President Barack Obama', and 'let us know'. 
 
 ### Web App in Action
 Some screenshots of the n-gram word predictor in action can be seen below.
 
-![Example 1](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/Screenshot%202022-10-04%20at%201.54.46%20PM.png)
+![Example 1](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/app1.png)
 
-![Example 2](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/Screenshot%202022-10-04%20at%201.55.09%20PM.png)
+![Example 2](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/App2.png)
 
-![Example 3](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/Screenshot%202022-10-04%20at%202.07.14%20PM.png)
+![Example 3](https://github.com/Gianatmaja/NGram-Word-Predictor/blob/master/Images/App3.png)
